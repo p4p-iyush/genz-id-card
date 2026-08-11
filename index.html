@@ -1,1 +1,379 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Make Your ID. Apni Vibe Mein 😎</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .font-display { font-family: 'Space Grotesk', sans-serif; }
+  .barcode {
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.95) 0 2px, transparent 2px 4px, rgba(255,255,255,.5) 4px 5px, transparent 5px 7px);
+  }
+  .dotgrid {
+    background-image: radial-gradient(circle, white 1px, transparent 1px);
+    background-size: 14px 14px;
+  }
+  ::-webkit-scrollbar { height: 6px; width: 6px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 999px; }
+  @keyframes floaty { 0%,100%{ transform: translateY(0px);} 50%{ transform: translateY(-10px);} }
+  .float { animation: floaty 6s ease-in-out infinite; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(12px);} to { opacity:1; transform: translateY(0);} }
+  .fade-up { animation: fadeUp .6s ease both; }
+</style>
+</head>
+<body class="bg-[#0B0A14] text-[#F3F1FF] min-h-screen overflow-x-hidden">
+
+  <!-- ambient blobs -->
+  <div class="pointer-events-none fixed -top-24 -left-24 w-72 h-72 bg-fuchsia-600/30 rounded-full blur-3xl float"></div>
+  <div class="pointer-events-none fixed top-1/3 -right-24 w-72 h-72 bg-indigo-600/30 rounded-full blur-3xl float" style="animation-delay:-3s"></div>
+
+  <header class="relative px-5 pt-12 pb-8 text-center fade-up">
+    <span class="inline-block text-[11px] font-semibold tracking-widest uppercase bg-white/5 border border-white/10 rounded-full px-3 py-1 mb-4 text-[#D6FF3F]">🪪 ID Card Generator</span>
+    <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight">Make Your ID.<br class="sm:hidden">
+      <span class="bg-gradient-to-r from-[#FF4D9D] to-[#8B5CF6] bg-clip-text text-transparent">Apni Vibe Mein</span> 😎
+    </h1>
+    <p class="mt-3 text-[#A79FC7] max-w-md mx-auto text-sm">Pick a template, fill your details, upload photo — bas ho gaya. No login, no drama, just vibes ✨</p>
+  </header>
+
+  <main class="relative max-w-6xl mx-auto px-4 pb-24 grid lg:grid-cols-[1fr_420px] gap-8 items-start">
+
+    <!-- LEFT: controls -->
+    <section class="space-y-6 fade-up" style="animation-delay:.05s">
+
+      <!-- template picker -->
+      <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-5">
+        <h2 class="font-display font-bold text-lg mb-1">1. Choose Your Template 🎨</h2>
+        <p class="text-xs text-[#A79FC7] mb-4">Har vibe ka apna card hota hai</p>
+        <div id="templateList" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+      </div>
+
+      <!-- form -->
+      <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-5">
+        <h2 class="font-display font-bold text-lg mb-1">2. Apni Details Daal Do 📝</h2>
+        <p class="text-xs text-[#A79FC7] mb-4">Sab yahin fill karo, koi drag-drop editor nahi hai</p>
+
+        <div class="flex items-center gap-4 mb-5">
+          <div id="photoPreviewWrap" class="w-20 h-20 rounded-2xl bg-white/5 border-2 border-dashed border-white/15 flex items-center justify-center overflow-hidden shrink-0">
+            <img id="photoPreview" class="w-full h-full object-cover hidden" alt="your photo" />
+            <span id="photoPlaceholder" class="text-2xl">📸</span>
+          </div>
+          <div>
+            <label class="cursor-pointer inline-block text-sm font-semibold bg-[#D6FF3F] text-[#0B0A14] rounded-full px-4 py-2 hover:brightness-95 active:scale-95 transition">
+              Upload Apni Photo 📸
+              <input type="file" id="photoInput" accept="image/*" class="hidden" />
+            </label>
+            <p class="text-[10px] text-[#A79FC7] mt-1">Square photo works best, bestie</p>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">Naam kya hai boss? 👑</label>
+            <input id="nameInput" type="text" placeholder="e.g. Aditi Sharma" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">Tu karta kya hai? 💼</label>
+            <input id="roleInput" type="text" placeholder="e.g. Chief Vibes Officer" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">Kaha se ho tum? 🏢</label>
+            <input id="orgInput" type="text" placeholder="e.g. IIT Vibes / ABC Corp" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">ID Number (koi bhi bana lo) 🔢</label>
+            <input id="idNumInput" type="text" placeholder="e.g. GZ2026001" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">Age? No lying 👀</label>
+            <input id="ageInput" type="number" min="0" placeholder="20" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">Gender</label>
+            <select id="genderSelect" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]">
+              <option value="" class="bg-[#14121F]">Select</option>
+              <option value="He/Him" class="bg-[#14121F]">He/Him</option>
+              <option value="She/Her" class="bg-[#14121F]">She/Her</option>
+              <option value="They/Them" class="bg-[#14121F]">They/Them</option>
+              <option value="Prefer not to say" class="bg-[#14121F]">Prefer not to say</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">DOB 🎂</label>
+            <input id="dobInput" type="date" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">Number (for the plot) 📱</label>
+            <input id="phoneInput" type="tel" placeholder="e.g. 98765 43210" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]" />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">Email 📧</label>
+            <input id="emailInput" type="email" placeholder="e.g. you@vibes.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="text-xs font-semibold text-[#A79FC7] mb-1 block">Address (roughly is fine) 📍</label>
+            <textarea id="addressInput" rows="2" placeholder="e.g. Bhopal, MP" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] resize-none"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: live preview -->
+    <aside class="lg:sticky lg:top-6 space-y-4 fade-up" style="animation-delay:.1s">
+      <div class="flex items-center justify-between">
+        <h2 class="font-display font-bold text-lg">Your ID, Your Rules 🔥</h2>
+        <button id="flipBtn" class="text-xs font-semibold bg-white/10 hover:bg-white/15 active:scale-95 rounded-full px-3 py-1.5 transition">🔄 Flip Card</button>
+      </div>
+
+      <div style="perspective:1500px;">
+        <div id="cardFlipper" class="relative w-full aspect-[85/54] transition-transform duration-700" style="transform-style:preserve-3d;">
+
+          <!-- FRONT -->
+          <div id="cardFront" class="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl shadow-black/50" style="backface-visibility:hidden;">
+            <div id="frontBg" class="absolute inset-0"></div>
+            <div class="absolute inset-0 opacity-10 dotgrid"></div>
+            <div class="absolute left-1/2 -translate-x-1/2 -top-2.5 w-10 h-4 bg-[#0B0A14] rounded-full border border-white/10"></div>
+
+            <div class="relative h-full flex flex-col p-4 text-white">
+              <div class="flex items-center justify-between mb-3">
+                <span id="frontTag" class="text-[10px] font-bold tracking-widest bg-black/25 rounded-full px-2 py-1 backdrop-blur">STUDENT PASS</span>
+                <span id="frontEmoji" class="text-lg">🎓</span>
+              </div>
+              <div class="flex gap-3 items-center">
+                <div class="w-16 h-16 rounded-2xl bg-white/20 border-2 border-white/40 overflow-hidden shrink-0 flex items-center justify-center">
+                  <img id="frontPhoto" class="w-full h-full object-cover hidden" alt="" />
+                  <span id="frontPhotoPlaceholder" class="text-2xl">🙂</span>
+                </div>
+                <div class="min-w-0">
+                  <p id="frontName" class="font-display font-bold text-lg leading-tight truncate">Your Name</p>
+                  <p id="frontRole" class="text-xs text-white/80 truncate">Role / Title</p>
+                  <p id="frontOrg" class="text-[11px] text-white/70 truncate">Org / College</p>
+                </div>
+              </div>
+              <div class="absolute bottom-10 right-4 text-[8px] font-bold tracking-wider bg-white/10 border border-dashed border-white/30 rounded-full px-2 py-1 -rotate-6 backdrop-blur-sm">✦ VERIFIED VIBES ✦</div>
+              <div class="mt-auto pt-3 border-t border-white/20 flex items-end justify-between">
+                <div>
+                  <p class="text-[9px] text-white/60 tracking-widest">ID NO.</p>
+                  <p id="frontIdNum" class="font-mono text-xs font-bold">GZ2026001</p>
+                </div>
+                <div class="barcode w-16 h-6 rounded-sm opacity-80"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BACK -->
+          <div id="cardBack" class="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl shadow-black/50" style="backface-visibility:hidden; transform:rotateY(180deg);">
+            <div id="backBg" class="absolute inset-0"></div>
+            <div class="absolute inset-0 opacity-10 dotgrid"></div>
+
+            <div class="relative h-full flex flex-col p-4 text-white">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[9px] font-bold tracking-widest text-white/70">BACK SIDE • FLIP KAR DIYA? 🙃</span>
+                <span id="backEmoji" class="text-sm">🎓</span>
+              </div>
+              <div class="bg-black/25 rounded-xl p-3 backdrop-blur-sm flex-1 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px] content-start">
+                <p class="text-white/50">DOB</p><p id="backDob" class="text-right font-medium truncate">—</p>
+                <p class="text-white/50">Age</p><p id="backAge" class="text-right font-medium truncate">—</p>
+                <p class="text-white/50">Gender</p><p id="backGender" class="text-right font-medium truncate">—</p>
+                <p class="text-white/50">Phone</p><p id="backPhone" class="text-right font-medium truncate">—</p>
+                <p class="text-white/50">Email</p><p id="backEmail" class="text-right font-medium truncate">—</p>
+                <p class="text-white/50">Address</p><p id="backAddress" class="text-right font-medium truncate">—</p>
+              </div>
+              <div class="mt-2 flex items-end justify-between">
+                <p class="text-[8px] text-white/50 italic max-w-[60%]">*Not a govt-valid ID lol, purely for vibes 🫶</p>
+                <div class="barcode w-14 h-5 rounded-sm opacity-70"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <button id="downloadCurrentBtn" class="text-sm font-semibold bg-gradient-to-r from-[#FF4D9D] to-[#8B5CF6] rounded-full py-2.5 hover:brightness-110 active:scale-95 transition">Download This Side 📥</button>
+        <button id="downloadBothBtn" class="text-sm font-semibold bg-white/10 hover:bg-white/15 rounded-full py-2.5 active:scale-95 transition">Download Both 🎉</button>
+      </div>
+      <p class="text-center text-[10px] text-[#A79FC7]">Looks fire? Download kar lo 🔥</p>
+    </aside>
+  </main>
+
+  <footer class="text-center text-[11px] text-[#A79FC7] pb-8">Made with chaos + Tailwind. No data saved, no cap. 🫡</footer>
+
+<script>
+  const templates = [
+    { id: 'campus',  label: 'Campus Chaos',   emoji: '🎓', tag: 'STUDENT PASS',  grad: 'bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-600', gradBack: 'bg-gradient-to-tr from-fuchsia-500 via-purple-500 to-indigo-600' },
+    { id: 'office',  label: 'Corporate Clown',emoji: '💼', tag: 'OFFICE ID',     grad: 'bg-gradient-to-br from-cyan-500 via-sky-500 to-blue-700',         gradBack: 'bg-gradient-to-tr from-cyan-500 via-sky-500 to-blue-700' },
+    { id: 'gamer',   label: 'Gamer Tag',      emoji: '🎮', tag: 'PLAYER CARD',   grad: 'bg-gradient-to-br from-lime-400 via-emerald-500 to-teal-700',     gradBack: 'bg-gradient-to-tr from-lime-400 via-emerald-500 to-teal-700' },
+    { id: 'fest',    label: 'Fest Pass',      emoji: '🎪', tag: 'ALL ACCESS',    grad: 'bg-gradient-to-br from-orange-400 via-pink-500 to-fuchsia-600',   gradBack: 'bg-gradient-to-tr from-orange-400 via-pink-500 to-fuchsia-600' },
+    { id: 'startup', label: 'Startup Bro',    emoji: '🚀', tag: 'FOUNDER MODE',  grad: 'bg-gradient-to-br from-indigo-500 via-violet-600 to-purple-800',  gradBack: 'bg-gradient-to-tr from-indigo-500 via-violet-600 to-purple-800' },
+    { id: 'creator', label: 'Creator Pass',   emoji: '🎬', tag: 'CONTENT ID',    grad: 'bg-gradient-to-br from-rose-500 via-pink-500 to-violet-600',      gradBack: 'bg-gradient-to-tr from-rose-500 via-pink-500 to-violet-600' },
+  ];
+
+  const state = { templateId: 'campus', flipped: false, photo: null,
+    name:'', role:'', org:'', idNumber:'', age:'', gender:'', dob:'', phone:'', email:'', address:'' };
+
+  const $ = (id) => document.getElementById(id);
+
+  // ---- template picker ----
+  const templateList = $('templateList');
+  templates.forEach(tpl => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.dataset.id = tpl.id;
+    btn.className = 'template-btn text-left rounded-2xl p-2.5 border transition ' +
+      (tpl.id === state.templateId ? 'border-[#D6FF3F] ring-2 ring-[#D6FF3F]/40 bg-white/5' : 'border-white/10 bg-white/[0.02] hover:bg-white/5');
+    btn.innerHTML = `
+      <div class="h-10 rounded-xl ${tpl.grad} mb-2 flex items-center justify-center text-lg">${tpl.emoji}</div>
+      <p class="text-xs font-semibold">${tpl.label}</p>
+    `;
+    btn.addEventListener('click', () => {
+      state.templateId = tpl.id;
+      document.querySelectorAll('.template-btn').forEach(b => {
+        b.className = 'template-btn text-left rounded-2xl p-2.5 border transition ' +
+          (b.dataset.id === state.templateId ? 'border-[#D6FF3F] ring-2 ring-[#D6FF3F]/40 bg-white/5' : 'border-white/10 bg-white/[0.02] hover:bg-white/5');
+      });
+      renderPreview();
+    });
+    templateList.appendChild(btn);
+  });
+
+  // ---- form bindings ----
+  const bindings = [
+    ['nameInput','name'], ['roleInput','role'], ['orgInput','org'], ['idNumInput','idNumber'],
+    ['ageInput','age'], ['genderSelect','gender'], ['dobInput','dob'], ['phoneInput','phone'],
+    ['emailInput','email'], ['addressInput','address'],
+  ];
+  bindings.forEach(([elId, key]) => {
+    $(elId).addEventListener('input', (e) => { state[key] = e.target.value; renderPreview(); });
+  });
+
+  // ---- photo upload ----
+  $('photoInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      state.photo = reader.result;
+      $('photoPreview').src = state.photo;
+      $('photoPreview').classList.remove('hidden');
+      $('photoPlaceholder').classList.add('hidden');
+      renderPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ---- flip ----
+  const cardFlipper = $('cardFlipper');
+  $('flipBtn').addEventListener('click', () => {
+    state.flipped = !state.flipped;
+    cardFlipper.style.transform = state.flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+  });
+
+  // ---- render preview ----
+  function renderPreview() {
+    const tpl = templates.find(t => t.id === state.templateId);
+
+    $('frontBg').className = 'absolute inset-0 ' + tpl.grad;
+    $('backBg').className = 'absolute inset-0 ' + tpl.gradBack;
+    $('frontTag').textContent = tpl.tag;
+    $('frontEmoji').textContent = tpl.emoji;
+    $('backEmoji').textContent = tpl.emoji;
+
+    $('frontName').textContent = state.name || 'Your Name';
+    $('frontRole').textContent = state.role || 'Role / Title';
+    $('frontOrg').textContent = state.org || 'Org / College';
+    $('frontIdNum').textContent = state.idNumber || 'GZ2026001';
+
+    $('backDob').textContent = state.dob || '—';
+    $('backAge').textContent = state.age || '—';
+    $('backGender').textContent = state.gender || '—';
+    $('backPhone').textContent = state.phone || '—';
+    $('backEmail').textContent = state.email || '—';
+    $('backAddress').textContent = state.address || '—';
+
+    if (state.photo) {
+      $('frontPhoto').src = state.photo;
+      $('frontPhoto').classList.remove('hidden');
+      $('frontPhotoPlaceholder').classList.add('hidden');
+    } else {
+      $('frontPhoto').classList.add('hidden');
+      $('frontPhotoPlaceholder').classList.remove('hidden');
+    }
+  }
+  renderPreview();
+
+  // ---- download ----
+  function slug(s) { return (s || 'my').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24) || 'my'; }
+
+  async function captureNode(node) {
+    const clone = node.cloneNode(true);
+    clone.style.transform = 'none';
+    clone.style.position = 'fixed';
+    clone.style.top = '-10000px';
+    clone.style.left = '0';
+    clone.style.width = node.offsetWidth + 'px';
+    clone.style.height = node.offsetHeight + 'px';
+    document.body.appendChild(clone);
+    const canvas = await html2canvas(clone, { scale: 3, backgroundColor: null });
+    clone.remove();
+    return canvas;
+  }
+
+  function triggerDownload(canvas, filename) {
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+
+  async function withBusy(btn, busyText, fn) {
+    const original = btn.textContent;
+    btn.textContent = busyText;
+    btn.disabled = true;
+    try { await fn(); } finally { btn.textContent = original; btn.disabled = false; }
+  }
+
+  $('downloadCurrentBtn').addEventListener('click', () => {
+    withBusy($('downloadCurrentBtn'), 'Cooking... 👨‍🍳', async () => {
+      const node = state.flipped ? $('cardBack') : $('cardFront');
+      const canvas = await captureNode(node);
+      triggerDownload(canvas, `${slug(state.name)}-id-${state.flipped ? 'back' : 'front'}.png`);
+    });
+  });
+
+  $('downloadBothBtn').addEventListener('click', () => {
+    withBusy($('downloadBothBtn'), 'Cooking... 👨‍🍳', async () => {
+      const c1 = await captureNode($('cardFront'));
+      const c2 = await captureNode($('cardBack'));
+      const gap = 24;
+      const combined = document.createElement('canvas');
+      combined.width = Math.max(c1.width, c2.width);
+      combined.height = c1.height + c2.height + gap;
+      const ctx = combined.getContext('2d');
+      ctx.fillStyle = '#0B0A14';
+      ctx.fillRect(0, 0, combined.width, combined.height);
+      ctx.drawImage(c1, 0, 0);
+      ctx.drawImage(c2, 0, c1.height + gap);
+      triggerDownload(combined, `${slug(state.name)}-id-full.png`);
+    });
+  });
+</script>
+</body>
+</html>
