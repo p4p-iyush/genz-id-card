@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎮 Pixel + Cartoon ID Maker</title>
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ========== HOME PAGE ========== -->
+  <section id="home-page">
+    <div class="home-container">
+      <h1 class="home-heading">🆔 ID MAKER</h1>
+      <div class="home-card" id="homeCard">
+        <div class="home-card-inner">
+          <div class="home-card-front">
+            <div class="home-card-pixel-badge">PIXEL</div>
+            <div class="home-card-avatar">👾</div>
+            <div class="home-card-name">PLAYER 1</div>
+            <div class="home-card-detail">⭐ LVL 99</div>
+            <div class="home-card-click">📸 CLICK ME</div>
+          </div>
+        </div>
+      </div>
+      <p class="home-sub">tap the card to start building</p>
+    </div>
+  </section>
+
+  <!-- ========== CREATOR PAGE ========== -->
+  <section id="creator-page" style="display:none;">
+    <div class="creator-header">
+      <button id="backHomeBtn" class="pixel-btn"><i class="fas fa-arrow-left"></i> BACK</button>
+      <span class="creator-title">✨ ID STUDIO</span>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="exportFrontBtn" class="pixel-btn"><i class="fas fa-download"></i> FRONT</button>
+        <button id="exportBackBtn" class="pixel-btn"><i class="fas fa-download"></i> BACK</button>
+        <button id="exportBothBtn" class="pixel-btn"><i class="fas fa-file-archive"></i> BOTH</button>
+        <button id="printBtn" class="pixel-btn"><i class="fas fa-print"></i> PRINT</button>
+      </div>
+    </div>
+
+    <div class="creator-main">
+      <!-- LEFT: TOOLBAR -->
+      <div class="toolbar">
+        <div class="tool-section">
+          <label>🎨 Theme</label>
+          <select id="themeSelect">
+            <option value="pixel">Pixel</option>
+            <option value="cartoon">Cartoon</option>
+            <option value="meme">Meme</option>
+            <option value="arcade">Arcade</option>
+            <option value="futuristic">Futuristic</option>
+          </select>
+        </div>
+        <div class="tool-section">
+          <label>➕ Add Field</label>
+          <div style="display:flex; gap:4px; flex-wrap:wrap;">
+            <input type="text" id="newFieldLabel" placeholder="label" style="flex:1; padding:4px; font-size:12px; min-width:60px;" />
+            <input type="text" id="newFieldValue" placeholder="value" style="flex:1; padding:4px; font-size:12px; min-width:60px;" />
+            <button id="addFieldBtn" class="pixel-btn small"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+        <div class="tool-section">
+          <label>🖼️ Upload Image</label>
+          <input type="file" id="imageUpload" accept="image/*" style="font-size:10px; width:100%;" />
+        </div>
+        <div class="tool-section">
+          <label>📱 QR Code</label>
+          <button id="addQrBtn" class="pixel-btn small"><i class="fas fa-qrcode"></i> ADD QR</button>
+        </div>
+        <div class="tool-section">
+          <label>🎨 Colors</label>
+          <div style="display:flex; gap:6px;">
+            <input type="color" id="cardBgColor" value="#f9e7b3" style="flex:1;" />
+            <input type="color" id="cardTextColor" value="#222" style="flex:1;" />
+          </div>
+        </div>
+        <div class="tool-section">
+          <label>🔤 Font</label>
+          <select id="fontSelect">
+            <option value="'Press Start 2P', cursive">Pixel</option>
+            <option value="'Fredoka One', cursive">Cartoon</option>
+            <option value="Comic Sans MS, cursive">Comic</option>
+            <option value="Arial, sans-serif">Clean</option>
+          </select>
+        </div>
+        <div class="tool-section">
+          <label>📦 Card Style</label>
+          <select id="cardStyleSelect">
+            <option value="solid">Solid</option>
+            <option value="gradient">Gradient</option>
+            <option value="dotted">Dotted</option>
+            <option value="striped">Striped</option>
+          </select>
+        </div>
+        <div class="tool-section">
+          <button id="removeSelectedBtn" class="pixel-btn small" style="background:#d34;"><i class="fas fa-trash"></i> REMOVE SELECTED</button>
+        </div>
+        <div class="tool-section" style="border-top:2px dashed #aaa; padding-top:10px;">
+          <label>💡 Meme line (back)</label>
+          <input type="text" id="memeLineInput" value="IT'S DONE BRO 😎" style="width:100%;" />
+        </div>
+      </div>
+
+      <!-- RIGHT: CARDS SIDE BY SIDE -->
+      <div class="cards-container">
+        <!-- FRONT CARD -->
+        <div class="card-wrapper">
+          <div class="card-label">🎴 FRONT</div>
+          <div class="card-single" id="frontCard">
+            <div class="card-side-content" id="frontSide">
+              <!-- dynamic fields will be injected -->
+            </div>
+          </div>
+        </div>
+
+        <!-- BACK CARD -->
+        <div class="card-wrapper">
+          <div class="card-label">🔄 BACK</div>
+          <div class="card-single" id="backCard">
+            <div class="card-side-content" id="backSide">
+              <!-- dynamic fields + default meme -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- hidden canvas for export -->
+  <canvas id="exportCanvas" style="display:none;"></canvas>
+
+  <!-- QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  
+  <script src="js/main.js"></script>
+</body>
+</html>
